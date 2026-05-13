@@ -1,169 +1,119 @@
 package dao;
 
 import model.SupportMessage;
-import utils.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatDAO {
+public class SupportMessageDAO {
+
+    private Connection conn;
+
+    public SupportMessageDAO(Connection conn) {
+        this.conn = conn;
+    }
 
     // =========================
-    // SEND MESSAGE
+    // GỬI TIN NHẮN (FIXED)
     // =========================
-    public boolean sendMessage(int userId,
-                               String role,
-                               String message){
+    public void sendMessage(int userId, String role, String message) throws SQLException {
+
+        String sql = "INSERT INTO support_messages(user_id, sender_role, message) VALUES (?, ?, ?)";
+
+        PreparedStatement ps = null;
 
         try {
-
-            Connection conn =
-                    DBConnection.getConnection();
-
-            String sql =
-                    "INSERT INTO support_messages(" +
-                            "user_id," +
-                            "sender_role," +
-                            "message" +
-                            ") VALUES(?,?,?)";
-
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
+            ps = conn.prepareStatement(sql);
 
             ps.setInt(1, userId);
-
             ps.setString(2, role);
-
             ps.setString(3, message);
 
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
 
-        } catch (Exception e){
-
-            e.printStackTrace();
+        } finally {
+            if (ps != null) ps.close();
         }
-
-        return false;
     }
 
     // =========================
-    // USER CHAT
+    // LẤY CHAT THEO USER
     // =========================
-    public List<SupportMessage> getChatByUser(int userId){
+    public List<SupportMessage> getByUserId(int userId) throws SQLException {
 
-        List<SupportMessage> list =
-                new ArrayList<>();
+        List<SupportMessage> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM support_messages WHERE user_id=? ORDER BY created_at ASC";
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
-
-            Connection conn =
-                    DBConnection.getConnection();
-
-            String sql =
-                    "SELECT * FROM support_messages " +
-                            "WHERE user_id=? " +
-                            "ORDER BY id ASC";
-
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
-
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
 
-            ResultSet rs =
-                    ps.executeQuery();
+            rs = ps.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
 
-                SupportMessage s =
-                        new SupportMessage();
+                SupportMessage msg = new SupportMessage();
 
-                s.setId(rs.getInt("id"));
+                msg.setId(rs.getInt("id"));
+                msg.setUserId(rs.getInt("user_id"));
+                msg.setSenderRole(rs.getString("sender_role"));
+                msg.setMessage(rs.getString("message"));
+                msg.setCreatedAt(rs.getString("created_at"));
 
-                s.setUserId(
-                        rs.getInt("user_id")
-                );
-
-                s.setSenderRole(
-                        rs.getString("sender_role")
-                );
-
-                s.setMessage(
-                        rs.getString("message")
-                );
-
-                list.add(s);
+                list.add(msg);
             }
 
-        } catch (Exception e){
-
-            e.printStackTrace();
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
         }
 
         return list;
     }
 
     // =========================
-    // ADMIN GET ALL
+    // ADMIN XEM TẤT CẢ CHAT
     // =========================
-    public List<SupportMessage> getAllMessages(){
+    public List<SupportMessage> getAll() throws SQLException {
 
-        List<SupportMessage> list =
-                new ArrayList<>();
+        List<SupportMessage> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM support_messages ORDER BY created_at ASC";
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
+            ps = conn.prepareStatement(sql);
 
-            Connection conn =
-                    DBConnection.getConnection();
+            rs = ps.executeQuery();
 
-            String sql =
-                    "SELECT * FROM support_messages " +
-                            "ORDER BY id DESC";
+            while (rs.next()) {
 
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
+                SupportMessage msg = new SupportMessage();
 
-            ResultSet rs =
-                    ps.executeQuery();
+                msg.setId(rs.getInt("id"));
+                msg.setUserId(rs.getInt("user_id"));
+                msg.setSenderRole(rs.getString("sender_role"));
+                msg.setMessage(rs.getString("message"));
+                msg.setCreatedAt(rs.getString("created_at"));
 
-            while(rs.next()){
-
-                SupportMessage s =
-                        new SupportMessage();
-
-                s.setId(rs.getInt("id"));
-
-                s.setUserId(
-                        rs.getInt("user_id")
-                );
-
-                s.setSenderRole(
-                        rs.getString("sender_role")
-                );
-
-                s.setMessage(
-                        rs.getString("message")
-                );
-
-                list.add(s);
+                list.add(msg);
             }
 
-        } catch (Exception e){
-
-            e.printStackTrace();
+        } finally {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
         }
 
         return list;
     }
 
-    // =========================
-    // GET MESSAGES
-    // =========================
-    public List<SupportMessage> getMessages(){
-
-        return getAllMessages();
+    public Object getChatByUser(int id) {
     }
 }
