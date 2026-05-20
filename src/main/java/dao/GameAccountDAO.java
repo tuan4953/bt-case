@@ -28,9 +28,7 @@ public class GameAccountDAO {
                 GameAccount g = new GameAccount();
 
                 g.setId(rs.getInt("id"));
-
-                // FIX mapping đúng DB
-                g.setGameName(rs.getString("game_id") + ""); // tạm hiển thị
+                g.setGameName(rs.getString("game_id") + "");
                 g.setAccountName(rs.getString("account_name"));
                 g.setPrice(rs.getDouble("price"));
                 g.setStatus(rs.getString("status"));
@@ -47,7 +45,7 @@ public class GameAccountDAO {
     }
 
     // =========================
-    // ADD PRODUCT (FIXED)
+    // ADD PRODUCT
     // =========================
     public boolean addProduct(GameAccount g) {
 
@@ -60,12 +58,10 @@ public class GameAccountDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // ⚠️ Tạm fix cứng game_id = 1 nếu bạn chưa làm select game
             ps.setInt(1, 1);
-
             ps.setString(2, g.getAccountName());
-            ps.setString(3, "admin_acc");     // tạm demo
-            ps.setString(4, "123");           // tạm demo
+            ps.setString(3, "admin_acc");
+            ps.setString(4, "123");
             ps.setString(5, "No description");
             ps.setString(6, "Normal");
             ps.setDouble(7, g.getPrice());
@@ -82,11 +78,12 @@ public class GameAccountDAO {
     }
 
     // =========================
-    // DELETE
+    // DELETE (soft delete khuyên dùng)
     // =========================
     public boolean deleteProduct(int id) {
 
-        String sql = "DELETE FROM game_accounts WHERE id=?";
+        // ❗ NÊN dùng soft delete thay vì DELETE
+        String sql = "UPDATE game_accounts SET status='DELETED' WHERE id=?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -164,6 +161,9 @@ public class GameAccountDAO {
         return false;
     }
 
+    // =========================
+    // SEARCH
+    // =========================
     public List<GameAccount> searchProducts(String keyword, String category) {
 
         List<GameAccount> list = new ArrayList<>();
@@ -214,31 +214,92 @@ public class GameAccountDAO {
         return list;
     }
 
+    // =========================================================
+    // 🔥🔥🔥 PHẦN QUAN TRỌNG - CHỐNG XUNG ĐỘT (MỚI THÊM)
+    // =========================================================
 
+    /**
+     * 🔒 KHÓA ROW khi user chuẩn bị mua (tránh admin sửa/xóa cùng lúc)
+     */
+    public GameAccount getForUpdate(Connection conn, int id) throws SQLException {
 
-    public boolean updateStatus(int id,
-                                String status){
+        String sql = "SELECT * FROM game_accounts WHERE id=? FOR UPDATE";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, id);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            GameAccount g = new GameAccount();
+            g.setId(rs.getInt("id"));
+            g.setAccountName(rs.getString("account_name"));
+            g.setPrice(rs.getDouble("price"));
+            g.setStatus(rs.getString("status"));
+
+            return g;
+        }
+
+        return null;
+    }
+
+    /**
+     * 💰 MUA AN TOÀN - chỉ mua nếu còn AVAILABLE
+     */
+    public boolean buyAccountSafe(Connection conn, int id) throws SQLException {
+
+        String sql =
+                "UPDATE game_accounts " +
+                        "SET status='SOLD' " +
+                        "WHERE id=? AND status='AVAILABLE'";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, id);
+
+        return ps.executeUpdate() > 0;
+    }
+
+    /**
+     * 🔄 UPDATE STATUS CÓ ĐIỀU KIỆN (tránh admin đè dữ liệu)
+     */
+    public boolean updateStatusSafe(Connection conn,
+                                    int id,
+                                    String status) throws SQLException {
+
+        String sql =
+                "UPDATE game_accounts " +
+                        "SET status=? " +
+                        "WHERE id=? AND status != 'SOLD'";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setString(1, status);
+        ps.setInt(2, id);
+
+        return ps.executeUpdate() > 0;
+    }
+
+    // =========================
+    // OLD METHOD (giữ lại nhưng KHÔNG khuyến khích)
+    // =========================
+    public boolean updateStatus(int id, String status) {
 
         try {
 
-            Connection conn =
-                    DBConnection.getConnection();
+            Connection conn = DBConnection.getConnection();
 
             String sql =
-                    "UPDATE game_accounts " +
-                            "SET status=? WHERE id=?";
+                    "UPDATE game_accounts SET status=? WHERE id=?";
 
-            PreparedStatement ps =
-                    conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, status);
-
             ps.setInt(2, id);
 
             return ps.executeUpdate() > 0;
 
-        } catch (Exception e){
-
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -14,5 +14,36 @@
         <welcome-file>home.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- 404 -->
+
+    <error-page>
+
+        <error-code>404</error-code>
+
+        <location>/webapp/error/404.jsp</location>
+
+    </error-page>
+
+    <!-- 500 -->
+
+    <error-page>
+
+        <error-code>500</error-code>
+
+        <location>/webapp/error/500.jsp</location>
+
+    </error-page>
+
+    <!-- EXCEPTION -->
+
+    <error-page>
+
+        <exception-type>
+            java.lang.Exception
+        </exception-type>
+
+        <location>/webapp/error/500.jsp</location>
+
+    </error-page>
 
 </web-app>

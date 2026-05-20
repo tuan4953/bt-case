@@ -17,16 +17,16 @@ import java.io.IOException;
 @WebServlet("/buy-now")
 public class BuyNowServlet extends HttpServlet {
 
-    GameAccountDAO gameDAO =
+    private final GameAccountDAO gameDAO =
             new GameAccountDAO();
 
-    UserDAO userDAO =
+    private final UserDAO userDAO =
             new UserDAO();
 
-    OrderDAO orderDAO =
+    private final OrderDAO orderDAO =
             new OrderDAO();
 
-    CartDAO cartDAO =
+    private final CartDAO cartDAO =
             new CartDAO();
 
     @Override
@@ -40,18 +40,24 @@ public class BuyNowServlet extends HttpServlet {
                 "text/html;charset=UTF-8"
         );
 
-        response.setCharacterEncoding("UTF-8");
+        HttpSession session =
+                request.getSession();
 
         try {
-
-            HttpSession session =
-                    request.getSession();
 
             User user =
                     (User) session.getAttribute("user");
 
-            // chưa login
+            // =========================
+            // CHECK LOGIN
+            // =========================
+
             if(user == null){
+
+                session.setAttribute(
+                        "error",
+                        "⚠ Vui lòng đăng nhập!"
+                );
 
                 response.sendRedirect("login.jsp");
                 return;
@@ -65,54 +71,67 @@ public class BuyNowServlet extends HttpServlet {
             GameAccount game =
                     gameDAO.getProductById(id);
 
-            // không tồn tại
+            // =========================
+            // PRODUCT NOT FOUND
+            // =========================
+
             if(game == null){
 
                 session.setAttribute(
-                        "message",
-                        "Sản phẩm không tồn tại!"
+                        "error",
+                        "❌ Sản phẩm không tồn tại!"
                 );
 
                 response.sendRedirect("products");
                 return;
             }
 
-            // đã bán
-            if("SOLD".equals(game.getStatus())){
+            // =========================
+            // SOLD
+            // =========================
+
+            if("SOLD".equalsIgnoreCase(
+                    game.getStatus()
+            )){
 
                 session.setAttribute(
-                        "message",
-                        "Acc đã được bán!"
+                        "error",
+                        "⚠ Acc đã được bán!"
                 );
 
                 response.sendRedirect("products");
                 return;
             }
 
-            // không đủ tiền
-            if(user.getBalance() < game.getPrice()){
+            // =========================
+            // NOT ENOUGH MONEY
+            // =========================
+
+            if(user.getBalance()
+                    < game.getPrice()){
 
                 session.setAttribute(
-                        "message",
-                        "Không đủ tiền!"
+                        "error",
+                        "💸 Không đủ số dư!"
                 );
 
                 response.sendRedirect("products");
                 return;
             }
 
-            // trừ tiền
+            // =========================
+            // UPDATE BALANCE
+            // =========================
+
             double newBalance =
                     user.getBalance()
                             - game.getPrice();
 
-            // update DB users
             userDAO.updateBalance(
                     user.getId(),
                     newBalance
             );
 
-            // update session
             user.setBalance(newBalance);
 
             session.setAttribute(
@@ -120,49 +139,53 @@ public class BuyNowServlet extends HttpServlet {
                     user
             );
 
-            // update SOLD
+            // =========================
+            // UPDATE SOLD
+            // =========================
+
             gameDAO.updateStatus(
                     game.getId(),
                     "SOLD"
             );
 
-            // tạo order
+            // =========================
+            // CREATE ORDER
+            // =========================
+
             orderDAO.createOrder(
                     user,
                     game
             );
 
-            // xoá khỏi cart
+            // =========================
+            // REMOVE CART
+            // =========================
+
             cartDAO.removeCart(
                     user.getId(),
                     game.getId()
             );
 
-            // thông báo
+            // =========================
+            // SUCCESS
+            // =========================
+
             session.setAttribute(
                     "message",
-                    "Mua acc thành công!"
-            );
-
-            response.sendRedirect(
-                    "products"
+                    "🎉 Mua acc thành công!"
             );
 
         } catch (Exception e){
 
             e.printStackTrace();
 
-            HttpSession session =
-                    request.getSession();
-
             session.setAttribute(
-                    "message",
-                    "Mua acc thất bại!"
-            );
-
-            response.sendRedirect(
-                    "products"
+                    "error",
+                    "❌ Mua acc thất bại!"
             );
         }
+
+        response.sendRedirect("products");
     }
 }
+

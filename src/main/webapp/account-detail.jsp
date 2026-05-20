@@ -1,21 +1,36 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.GameAccount" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.AccountImage" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    GameAccount acc = (GameAccount) request.getAttribute("account");
+    GameAccount acc =
+            (GameAccount) request.getAttribute("account");
+
+    List<AccountImage> images =
+            (List<AccountImage>)
+                    request.getAttribute("images");
+
+    if(acc == null){
+
+        response.sendRedirect("products");
+
+        return;
+    }
+
+    String img =
+            (acc.getImage() != null &&
+                    !acc.getImage().isEmpty())
+                    ? acc.getImage()
+                    : "default.jpg";
 %>
 
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Chi Tiết Tài Khoản</title>
+    <title>CHI TIẾT ACC</title>
 
     <style>
 
@@ -23,168 +38,228 @@
             margin:0;
             padding:0;
             box-sizing:border-box;
-            font-family:Arial,sans-serif;
         }
 
         body{
-            background:#0f172a;
+
+            background:#0f0f0f;
+
+            font-family:Arial;
+
             color:white;
-            min-height:100vh;
-            padding:40px;
         }
 
         .container{
-            max-width:1400px;
-            margin:auto;
-            display:grid;
-            grid-template-columns:1.1fr 1fr;
+
+            width:1200px;
+
+            margin:50px auto;
+
+            display:flex;
+
             gap:40px;
+
+            align-items:flex-start;
         }
 
-        /* LEFT */
+        /* ================= LEFT ================= */
 
         .left{
-            background:#111827;
-            border-radius:20px;
-            padding:25px;
-            box-shadow:0 0 25px rgba(0,0,0,0.4);
+
+            width:50%;
         }
 
         .main-image{
+
             width:100%;
+
             height:500px;
+
             object-fit:cover;
-            border-radius:18px;
-            border:3px solid #334155;
+
+            border-radius:20px;
+
+            border:3px solid gold;
+
+            box-shadow:0 0 20px rgba(255,215,0,0.3);
+        }
+
+        /* ================= GALLERY ================= */
+
+        .gallery{
+
+            display:flex;
+
+            gap:15px;
+
+            margin-top:20px;
+
+            flex-wrap:wrap;
+        }
+
+        .gallery img{
+
+            width:120px;
+
+            height:80px;
+
+            object-fit:cover;
+
+            border-radius:10px;
+
+            border:2px solid gold;
+
+            cursor:pointer;
+
             transition:0.3s;
         }
 
-        .thumbs{
-            display:flex;
-            gap:15px;
-            margin-top:20px;
-            overflow-x:auto;
-        }
+        .gallery img:hover{
 
-        .thumbs img{
-            width:120px;
-            height:90px;
-            object-fit:cover;
-            border-radius:12px;
-            cursor:pointer;
-            border:3px solid transparent;
-            transition:0.25s;
-        }
-
-        .thumbs img:hover{
             transform:scale(1.05);
-            border-color:#38bdf8;
+
+            box-shadow:0 0 15px gold;
         }
 
-        /* RIGHT */
+        /* ================= RIGHT ================= */
 
         .right{
-            background:#111827;
-            border-radius:20px;
+
+            width:50%;
+
+            background:#1a1a1a;
+
             padding:30px;
-            box-shadow:0 0 25px rgba(0,0,0,0.4);
+
+            border-radius:20px;
+
+            border:2px solid gold;
         }
 
-        .tag{
-            display:inline-block;
-            background:#ef4444;
-            padding:8px 16px;
-            border-radius:30px;
-            margin-bottom:20px;
-            font-weight:bold;
-            font-size:14px;
+        h1{
+
+            color:gold;
+
+            margin-bottom:25px;
+
+            font-size:40px;
         }
 
-        .title{
-            font-size:34px;
-            font-weight:bold;
-            margin-bottom:15px;
+        .info{
+
+            line-height:45px;
+
+            font-size:20px;
         }
 
         .price{
-            font-size:40px;
-            color:#22c55e;
-            margin-bottom:25px;
+
+            font-size:42px;
+
+            color:gold;
+
             font-weight:bold;
+
+            margin:30px 0;
         }
 
-        .info-box{
-            background:#1e293b;
-            padding:18px;
-            border-radius:15px;
-            margin-bottom:18px;
-        }
+        /* ================= BUTTONS ================= */
 
-        .info-title{
-            color:#94a3b8;
-            margin-bottom:8px;
-            font-size:14px;
-        }
+        .buttons{
 
-        .info-content{
-            font-size:18px;
-            font-weight:bold;
-        }
-
-        .description{
-            margin-top:25px;
-            line-height:1.8;
-            color:#cbd5e1;
-        }
-
-        .btn-group{
             display:flex;
-            gap:20px;
-            margin-top:35px;
+
+            gap:15px;
+
+            margin-top:30px;
+
+            width:100%;
         }
 
-        .btn{
+        .buttons a{
+
             flex:1;
-            padding:18px;
-            border:none;
-            border-radius:15px;
-            cursor:pointer;
-            font-size:18px;
-            font-weight:bold;
-            transition:0.25s;
 
-            display:flex;
-            justify-content:center;
-            align-items:center;
+            text-align:center;
 
             text-decoration:none;
+
+            padding:15px 20px;
+
+            border-radius:12px;
+
+            font-weight:bold;
+
+            transition:0.3s;
+
+            font-size:16px;
+
+            box-shadow:0 0 10px rgba(255,255,255,0.2);
         }
 
-        .cart-btn{
-            background:linear-gradient(45deg,#3b82f6,#2563eb);
+        .buy{
+
+            background:#007bff;
+
             color:white;
         }
 
-        .buy-btn{
-            background:linear-gradient(45deg,#22c55e,#16a34a);
+        .cart{
+
+            background:#00a651;
+
             color:white;
         }
 
-        .btn:hover{
+        .buttons a:hover{
+
             transform:translateY(-3px);
-            box-shadow:0 10px 20px rgba(0,0,0,0.3);
+
+            opacity:0.9;
         }
 
-        @media(max-width:1100px){
+        /* ================= BACK ================= */
+
+        .back{
+
+            display:inline-block;
+
+            margin-top:30px;
+
+            color:gold;
+
+            text-decoration:none;
+
+            font-weight:bold;
+        }
+
+        .back:hover{
+
+            text-decoration:underline;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:1250px){
 
             .container{
-                grid-template-columns:1fr;
+
+                width:95%;
+            }
+        }
+
+        @media(max-width:900px){
+
+            .container{
+
+                flex-direction:column;
             }
 
-            .main-image{
-                height:400px;
-            }
+            .left,
+            .right{
 
+                width:100%;
+            }
         }
 
     </style>
@@ -199,28 +274,34 @@
 
     <div class="left">
 
-        <!-- ẢNH CHÍNH -->
+        <!-- MAIN IMAGE -->
 
-        <img id="mainImg"
-             class="main-image"
-             src="<%= acc.getImage() %>"
-             alt="">
+        <img
+                id="mainImage"
+                class="main-image"
+                src="<%= request.getContextPath() %>/image?name=<%= img %>"
+        >
 
-        <!-- ẢNH PHỤ -->
+        <!-- MULTIPLE IMAGES -->
 
-        <div class="thumbs">
+        <div class="gallery">
 
-            <img onclick="changeImg(this)"
-                 src="<%= acc.getImage() %>">
+            <%
+                if(images != null &&
+                        !images.isEmpty()){
 
-            <img onclick="changeImg(this)"
-                 src="images/demo1.jpg">
+                    for(AccountImage i : images){
+            %>
 
-            <img onclick="changeImg(this)"
-                 src="images/demo2.jpg">
+            <img
+                    src="<%= request.getContextPath() %>/image?name=<%= i.getImageName() %>"
+                    onclick="changeImage(this.src)"
+            >
 
-            <img onclick="changeImg(this)"
-                 src="images/demo3.jpg">
+            <%
+                    }
+                }
+            %>
 
         </div>
 
@@ -230,83 +311,60 @@
 
     <div class="right">
 
-        <div class="tag">
-            HOT ACCOUNT
-        </div>
+        <h1>
 
-        <div class="title">
-            <%= acc.getTitle() %>
+            <%= acc.getAccountName() %>
+
+        </h1>
+
+        <div class="info">
+
+            🎮 Game:
+            <%= acc.getGameName() %>
+
+            <br>
+
+            📌 Trạng thái:
+            <%= acc.getStatus() %>
+
+            <br>
+
+            🆔 Mã acc:
+            #<%= acc.getId() %>
+
         </div>
 
         <div class="price">
-            <%= acc.getPrice() %> VNĐ
-        </div>
 
-        <div class="info-box">
-
-            <div class="info-title">
-                Rank
-            </div>
-
-            <div class="info-content">
-                <%= acc.getRank() %>
-            </div>
+            <%= (int)acc.getPrice() %>đ
 
         </div>
 
-        <div class="info-box">
+        <div class="buttons">
 
-            <div class="info-title">
-                Skin
-            </div>
+            <a class="cart"
+               href="add-to-cart?id=<%= acc.getId() %>">
 
-            <div class="info-content">
-                <%= acc.getSkin() %>
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            <div class="info-title">
-                Tướng
-            </div>
-
-            <div class="info-content">
-                <%= acc.getChampion() %>
-            </div>
-
-        </div>
-
-        <div class="description">
-
-            <%= acc.getDescription() %>
-
-        </div>
-
-        <!-- BUTTON -->
-
-        <div class="btn-group">
-
-            <!-- THÊM GIỎ -->
-
-            <a href="add-to-cart?id=<%= acc.getId() %>"
-               class="btn cart-btn">
-
-                Thêm Giỏ Hàng
+                🛒 Thêm vào giỏ
 
             </a>
 
-            <!-- MUA NGAY -->
+            <a class="buy"
+               href="buy-now?id=<%= acc.getId() %>"
+               onclick="return confirm('Xác nhận mua acc này?')">
 
-            <a href="buy-now?id=<%= acc.getId() %>"
-               class="btn buy-btn">
-
-                Mua Ngay
+                💳 Mua ngay
 
             </a>
 
         </div>
+
+        <a class="back"
+           href="products">
+
+            ← Quay lại cửa hàng
+
+        </a>
 
     </div>
 
@@ -314,14 +372,16 @@
 
 <script>
 
-    function changeImg(el){
+    // ĐỔI ẢNH LỚN
 
-        document.getElementById("mainImg").src = el.src;
+    function changeImage(src){
 
+        document.getElementById(
+            "mainImage"
+        ).src = src;
     }
 
 </script>
 
 </body>
-
 </html>

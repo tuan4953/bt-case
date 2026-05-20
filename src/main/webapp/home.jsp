@@ -165,6 +165,7 @@
     }
 
     .go-btn{
+
       display:inline-block;
       margin-top:25px;
       padding:12px 30px;
@@ -205,7 +206,7 @@
 <jsp:include page="chat-box.jsp" />
 <body>
 
-<div class="header">
+<div class="header" >
 
   <div class="logo">
     SHOP ACC GAME
@@ -251,10 +252,6 @@
     HỆ THỐNG SHOP ACC GAME
   </h1>
 
-  <p>
-    Website bán acc game tự động bằng JSP Servlet + MySQL.
-  </p>
-
 </div>
 
 <div class="content">
@@ -267,7 +264,7 @@
 
     <!-- PRODUCTS -->
 
-    <div class="box">
+    <div class="box" onclick="location.href='products'">
 
       <div class="icon">
         🎮
@@ -293,7 +290,7 @@
 
     <!-- GIẢI TRÍ -->
 
-    <div class="box">
+    <div class="box" onclick="location.href='taixiu.jsp'">
 
       <div class="icon">
         🎲
@@ -319,7 +316,7 @@
 
     <!-- NẠP TIỀN -->
 
-    <div class="box">
+    <div class="box" onclick="location.href='deposit.jsp'">
 
       <div class="icon">
         💰
@@ -345,7 +342,7 @@
 
     <!-- LỊCH SỬ -->
 
-    <div class="box">
+    <div class="box" onclick="location.href='purchase-history'">
 
       <div class="icon">
         📜

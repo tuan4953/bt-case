@@ -1,4 +1,5 @@
-package controller;
+
+        package controller;
 
 import dao.CartDAO;
 
@@ -11,10 +12,9 @@ import model.User;
 import java.io.IOException;
 
 @WebServlet("/add-to-cart")
-public class AddToCartServlet
-        extends HttpServlet {
+public class AddToCartServlet extends HttpServlet {
 
-    CartDAO cartDAO =
+    private final CartDAO cartDAO =
             new CartDAO();
 
     @Override
@@ -22,15 +22,20 @@ public class AddToCartServlet
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        try {
+        HttpSession session =
+                request.getSession();
 
-            HttpSession session =
-                    request.getSession();
+        try {
 
             User user =
                     (User) session.getAttribute("user");
 
             if(user == null){
+
+                session.setAttribute(
+                        "error",
+                        "⚠ Vui lòng đăng nhập!"
+                );
 
                 response.sendRedirect("login.jsp");
                 return;
@@ -51,24 +56,28 @@ public class AddToCartServlet
 
                 session.setAttribute(
                         "message",
-                        "Đã thêm vào giỏ hàng!"
+                        "🛒 Đã thêm vào giỏ hàng!"
                 );
 
             } else {
 
                 session.setAttribute(
-                        "message",
-                        "Acc đã có trong giỏ!"
+                        "error",
+                        "⚠ Acc đã tồn tại trong giỏ!"
                 );
             }
-
-            response.sendRedirect("products");
 
         } catch (Exception e){
 
             e.printStackTrace();
 
-            response.sendRedirect("products");
+            session.setAttribute(
+                    "error",
+                    "❌ Thêm giỏ hàng thất bại!"
+            );
         }
+
+        response.sendRedirect("products");
     }
 }
+

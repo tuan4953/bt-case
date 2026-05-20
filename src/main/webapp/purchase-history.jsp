@@ -3,55 +3,55 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-  List<GameAccount> history =
-          (List<GameAccount>)
-                  request.getAttribute("history");
+    List<GameAccount> history =
+            (List<GameAccount>)
+                    request.getAttribute("history");
 %>
 
 <html>
 
 <head>
 
-  <title>Lịch sử mua</title>
+    <title>Lịch sử mua</title>
 
-  <style>
+    <style>
 
-    body{
-      background:#111;
-      color:white;
-      font-family:Arial;
-      padding:30px;
-    }
-    .header{
-      background:#1c1c1c;
-      padding:20px 40px;
-      border-bottom:2px solid gold;
+        body{
+            background:#111;
+            color:white;
+            font-family:Arial;
+            padding:30px;
+        }
+        .header{
+            background:#1c1c1c;
+            padding:20px 40px;
+            border-bottom:2px solid gold;
 
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-    h1{
-      text-align:center;
-      color:gold;
-    }
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        h1{
+            text-align:center;
+            color:gold;
+        }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-    }
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
 
-    th,td{
-      border:1px solid gold;
-      padding:15px;
-      text-align:center;
-    }
+        th,td{
+            border:1px solid gold;
+            padding:15px;
+            text-align:center;
+        }
 
-    th{
-      background:#8b0000;
-    }
+        th{
+            background:#8b0000;
+        }
 
-  </style>
+    </style>
 
 </head>
 <jsp:include page="chat-box.jsp" />
@@ -59,61 +59,61 @@
 
 <div class="header">
 
-  <div class="logo">
-    SHOP ACC GAME
-  </div>
+    <div class="logo">
+        SHOP ACC GAME
+    </div>
 
-  <a class="back-btn"
-     href="home.jsp">
+    <a class="back-btn"
+       href="home.jsp">
 
-    ← QUAY LẠI HOME
+        ← QUAY LẠI HOME
 
-  </a>
+    </a>
 
 </div>
 <h1>LỊCH SỬ MUA ACC</h1>
 
 <table>
 
-  <tr>
+    <tr>
 
-    <th>Game</th>
-    <th>Acc</th>
-    <th>Giá</th>
-    <th>Trạng thái</th>
+        <th>Game</th>
+        <th>Acc</th>
+        <th>Giá</th>
+        <th>Trạng thái</th>
 
-  </tr>
+    </tr>
 
-  <%
-    if(history != null){
+    <%
+        if(history != null){
 
-      for(GameAccount g : history){
-  %>
+            for(GameAccount g : history){
+    %>
 
-  <tr>
+    <tr>
 
-    <td>
-      <%= g.getGameName() %>
-    </td>
+        <td>
+            <%= g.getGameName() %>
+        </td>
 
-    <td>
-      <%= g.getAccountName() %>
-    </td>
+        <td>
+            <%= g.getAccountName() %>
+        </td>
 
-    <td>
-      <%= (int)g.getPrice() %>đ
-    </td>
+        <td>
+            <%= (int)g.getPrice() %>đ
+        </td>
 
-    <td>
-      ĐÃ THANH TOÁN
-    </td>
+        <td>
+            ĐÃ THANH TOÁN
+        </td>
 
-  </tr>
+    </tr>
 
-  <%
-      }
-    }
-  %>
+    <%
+            }
+        }
+    %>
 
 </table>
 
