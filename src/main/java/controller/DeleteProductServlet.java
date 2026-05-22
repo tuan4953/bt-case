@@ -25,6 +25,39 @@ public class DeleteProductServlet extends HttpServlet {
 
         HttpSession session =
                 request.getSession(false);
+        User user =
+                (User) session.getAttribute("user");
+
+        if(user == null){
+
+            session.setAttribute(
+                    "error",
+                    "⚠ Vui lòng đăng nhập!"
+            );
+
+            response.sendRedirect("login.jsp");
+
+            return;
+        }
+
+// =========================
+// CHECK ADMIN
+// =========================
+
+        if(user.getRole() == null
+                ||
+                !user.getRole()
+                        .equalsIgnoreCase("ADMIN")){
+
+            session.setAttribute(
+                    "error",
+                    "❌ Bạn không có quyền truy cập!"
+            );
+
+            response.sendRedirect("products");
+
+            return;
+        }
 
         try {
 
@@ -38,8 +71,7 @@ public class DeleteProductServlet extends HttpServlet {
                 return;
             }
 
-            User user =
-                    (User) session.getAttribute("user");
+
 
             // =========================
             // CHECK ADMIN

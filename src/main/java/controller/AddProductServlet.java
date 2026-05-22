@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import model.GameAccount;
+import model.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,46 @@ public class AddProductServlet extends HttpServlet {
 
         HttpSession session =
                 request.getSession();
+
+// =========================
+// CHECK LOGIN
+// =========================
+
+        User user =
+                (User) session.getAttribute("user");
+
+        if(user == null){
+
+            session.setAttribute(
+                    "error",
+                    "⚠ Vui lòng đăng nhập!"
+            );
+
+            response.sendRedirect("login.jsp");
+
+            return;
+        }
+
+// =========================
+// CHECK ADMIN
+// =========================
+
+        if(user.getRole() == null
+                ||
+                !user.getRole()
+                        .equalsIgnoreCase("ADMIN")){
+
+            session.setAttribute(
+                    "error",
+                    "❌ Bạn không có quyền truy cập!"
+            );
+
+            response.sendRedirect("products");
+
+            return;
+        }
+
+
 
         try {
 

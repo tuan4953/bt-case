@@ -25,27 +25,28 @@ public class OrderDAO {
 
             String sql =
                     "INSERT INTO orders(" +
-                            "user_id, " +
-                            "account_id, " +
-                            "purchase_price, " +
-                            "acc_user_delivered, " +
+                            "user_id," +
+                            "account_id," +
+                            "purchase_price," +
+                            "acc_user_delivered," +
                             "acc_pass_delivered" +
                             ") VALUES(?,?,?,?,?)";
 
             PreparedStatement ps =
                     conn.prepareStatement(sql);
 
-            ps.setInt(1, user.getId());
+            ps.setInt(1,user.getId());
 
-            ps.setInt(2, game.getId());
+            ps.setInt(2,game.getId());
 
-            ps.setDouble(3, game.getPrice());
+            ps.setDouble(3,game.getPrice());
 
-            ps.setString(4,
-                    game.getAccountName());
+            ps.setString(
+                    4,
+                    game.getAccountName()
+            );
 
-            ps.setString(5,
-                    "hidden");
+            ps.setString(5,"hidden");
 
             return ps.executeUpdate() > 0;
 
@@ -81,7 +82,7 @@ public class OrderDAO {
             PreparedStatement ps =
                     conn.prepareStatement(sql);
 
-            ps.setInt(1, userId);
+            ps.setInt(1,userId);
 
             ResultSet rs =
                     ps.executeQuery();
@@ -95,7 +96,6 @@ public class OrderDAO {
                         rs.getInt("id")
                 );
 
-                // FIX TÊN CỘT
                 g.setGameName(
                         rs.getString("game_id")
                 );
@@ -117,9 +117,6 @@ public class OrderDAO {
                 );
 
                 list.add(g);
-
-                // DEBUG
-                System.out.println(g);
             }
 
         } catch (Exception e){
@@ -128,5 +125,81 @@ public class OrderDAO {
         }
 
         return list;
+    }
+
+    // =========================
+    // TOTAL PURCHASED
+    // =========================
+    public int getTotalPurchased(int userId){
+
+        int total = 0;
+
+        try {
+
+            Connection conn =
+                    DBConnection.getConnection();
+
+            String sql =
+                    "SELECT COUNT(*) " +
+                            "FROM orders " +
+                            "WHERE user_id=?";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ps.setInt(1,userId);
+
+            ResultSet rs =
+                    ps.executeQuery();
+
+            if(rs.next()){
+
+                total = rs.getInt(1);
+            }
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+    // =========================
+    // TOTAL SPENT
+    // =========================
+    public double getTotalSpent(int userId){
+
+        double total = 0;
+
+        try {
+
+            Connection conn =
+                    DBConnection.getConnection();
+
+            String sql =
+                    "SELECT SUM(purchase_price) " +
+                            "FROM orders " +
+                            "WHERE user_id=?";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ps.setInt(1,userId);
+
+            ResultSet rs =
+                    ps.executeQuery();
+
+            if(rs.next()){
+
+                total = rs.getDouble(1);
+            }
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        return total;
     }
 }

@@ -6,61 +6,320 @@
     List<GameAccount> history =
             (List<GameAccount>)
                     request.getAttribute("history");
+
+    Integer totalPurchased =
+            (Integer)
+                    request.getAttribute("totalPurchased");
+
+    Double totalSpent =
+            (Double)
+                    request.getAttribute("totalSpent");
+
+    if(totalPurchased == null)
+        totalPurchased = 0;
+
+    if(totalSpent == null)
+        totalSpent = 0.0;
 %>
 
+<!DOCTYPE html>
 <html>
 
 <head>
 
-    <title>Lịch sử mua</title>
+    <title>Lịch sử mua acc</title>
+
+    <meta charset="UTF-8">
 
     <style>
 
-        body{
-            background:#111;
-            color:white;
-            font-family:Arial;
-            padding:30px;
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
+
+        body{
+
+            font-family:'Segoe UI',sans-serif;
+
+            background:
+                    linear-gradient(
+                            rgba(0,0,0,0.88),
+                            rgba(0,0,0,0.92)
+                    ),
+                    url('https://images.unsplash.com/photo-1542751110-97427bbecf20');
+
+            background-size:cover;
+
+            background-attachment:fixed;
+
+            color:white;
+
+            min-height:100vh;
+        }
+
+        a{
+            text-decoration:none;
+        }
+
+        /* HEADER */
+
         .header{
-            background:#1c1c1c;
-            padding:20px 40px;
-            border-bottom:2px solid gold;
 
             display:flex;
+
             justify-content:space-between;
+
             align-items:center;
+
+            padding:18px 40px;
+
+            background:
+                    rgba(15,15,15,0.78);
+
+            backdrop-filter:blur(14px);
+
+            border-bottom:
+                    1px solid rgba(255,215,0,0.2);
         }
-        h1{
-            text-align:center;
+
+        .logo{
+
+            font-size:28px;
+
+            font-weight:900;
+
             color:gold;
+
+            text-shadow:
+                    0 0 10px gold;
+        }
+
+        .back-btn{
+
+            padding:12px 18px;
+
+            border-radius:10px;
+
+            background:gold;
+
+            color:black;
+
+            font-weight:bold;
+
+            transition:0.3s;
+        }
+
+        .back-btn:hover{
+
+            transform:translateY(-2px);
+        }
+
+        /* TITLE */
+
+        .page-title{
+
+            text-align:center;
+
+            padding:40px 20px 25px;
+        }
+
+        .page-title h1{
+
+            font-size:48px;
+
+            color:gold;
+
+            text-shadow:
+                    0 0 15px gold;
+        }
+
+        /* STATS */
+
+        .stats-container{
+
+            width:95%;
+
+            margin:auto;
+
+            display:grid;
+
+            grid-template-columns:1fr;
+
+            gap:18px;
+
+            margin-bottom:30px;
+        }
+
+        .stats-box{
+
+            background:
+                    linear-gradient(
+                            145deg,
+                            rgba(25,25,25,0.95),
+                            rgba(12,12,12,0.95)
+                    );
+
+            border:
+                    1px solid rgba(255,215,0,0.18);
+
+            border-radius:20px;
+
+            padding:25px;
+
+            text-align:center;
+
+            box-shadow:
+                    0 0 20px rgba(255,215,0,0.15);
+        }
+
+        .stats-box h2{
+
+            font-size:18px;
+
+            color:#ccc;
+
+            margin-bottom:12px;
+        }
+
+        .stats-box .value{
+
+            font-size:38px;
+
+            font-weight:900;
+
+            color:gold;
+
+            text-shadow:
+                    0 0 12px rgba(255,215,0,0.4);
+        }
+
+        /* TABLE */
+
+        .table-container{
+
+            width:95%;
+
+            margin:auto;
+
+            overflow:auto;
+
+            border-radius:20px;
+
+            background:
+                    rgba(15,15,15,0.92);
+
+            border:
+                    1px solid rgba(255,215,0,0.15);
         }
 
         table{
+
             width:100%;
+
             border-collapse:collapse;
         }
 
-        th,td{
-            border:1px solid gold;
-            padding:15px;
-            text-align:center;
+        th{
+
+            background:
+                    linear-gradient(
+                            90deg,
+                            #7a0000,
+                            #a30000
+                    );
+
+            padding:18px;
+
+            font-size:15px;
         }
 
-        th{
-            background:#8b0000;
+        td{
+
+            padding:16px;
+
+            text-align:center;
+
+            border-bottom:
+                    1px solid rgba(255,255,255,0.08);
+
+            font-size:14px;
+        }
+
+        tr:hover{
+
+            background:
+                    rgba(255,215,0,0.06);
+        }
+
+        /* STATUS */
+
+        .paid{
+
+            color:#00ff95;
+
+            font-weight:bold;
+        }
+
+        /* FOOTER */
+
+        .footer{
+
+            margin-top:50px;
+
+            padding:30px;
+
+            text-align:center;
+
+            background:#090909;
+
+            border-top:
+                    1px solid rgba(255,215,0,0.2);
+        }
+
+        .footer h2{
+
+            color:gold;
+
+            margin-bottom:10px;
+        }
+
+        .footer p{
+
+            color:#aaa;
+
+            margin-top:8px;
+        }
+
+        /* MOBILE FIRST */
+
+        @media(min-width:700px){
+
+            .stats-container{
+
+                grid-template-columns:
+repeat(2,1fr);
+            }
+
+            .page-title h1{
+
+                font-size:55px;
+            }
         }
 
     </style>
 
 </head>
-<jsp:include page="chat-box.jsp" />
+
 <body>
 
 <div class="header">
 
     <div class="logo">
-        SHOP ACC GAME
+
+        🎮 GAME STORE
+
     </div>
 
     <a class="back-btn"
@@ -71,51 +330,123 @@
     </a>
 
 </div>
-<h1>LỊCH SỬ MUA ACC</h1>
 
-<table>
+<div class="page-title">
 
-    <tr>
+    <h1>
+        📜 LỊCH SỬ MUA ACC
+    </h1>
 
-        <th>Game</th>
-        <th>Acc</th>
-        <th>Giá</th>
-        <th>Trạng thái</th>
+</div>
 
-    </tr>
+<!-- STATS -->
 
-    <%
-        if(history != null){
+<div class="stats-container">
 
-            for(GameAccount g : history){
-    %>
+    <div class="stats-box">
 
-    <tr>
+        <h2>
+            📦 TỔNG ACC ĐÃ MUA
+        </h2>
 
-        <td>
-            <%= g.getGameName() %>
-        </td>
+        <div class="value">
 
-        <td>
-            <%= g.getAccountName() %>
-        </td>
+            <%= totalPurchased %>
 
-        <td>
-            <%= (int)g.getPrice() %>đ
-        </td>
+        </div>
 
-        <td>
-            ĐÃ THANH TOÁN
-        </td>
+    </div>
 
-    </tr>
+    <div class="stats-box">
 
-    <%
+        <h2>
+            💰 TỔNG TIỀN ĐÃ THANH TOÁN
+        </h2>
+
+        <div class="value">
+
+            <%= String.format("%,.0f",totalSpent) %>đ
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="table-container">
+
+    <table>
+
+        <tr>
+
+            <th>Game</th>
+            <th>Acc</th>
+            <th>Giá</th>
+            <th>Trạng thái</th>
+
+        </tr>
+
+        <%
+            if(history != null){
+
+                for(GameAccount g : history){
+        %>
+
+        <tr>
+
+            <td>
+
+                <%= g.getGameName() %>
+
+            </td>
+
+            <td>
+
+                <%= g.getAccountName() %>
+
+            </td>
+
+            <td>
+
+                <%= String.format("%,.0f",g.getPrice()) %>đ
+
+            </td>
+
+            <td class="paid">
+
+                ĐÃ THANH TOÁN
+
+            </td>
+
+        </tr>
+
+        <%
+                }
             }
-        }
-    %>
+        %>
 
-</table>
+    </table>
 
+</div>
+
+<div class="footer">
+
+    <h2>
+        🎮 GAME STORE
+    </h2>
+
+    <p>
+        Lịch sử giao dịch acc game
+    </p>
+
+    <p>
+        Uy tín • Tự động • Nhanh chóng
+    </p>
+
+</div>
+<jsp:include page="chat-box.jsp"/>
 </body>
 </html>
+

@@ -17,13 +17,10 @@ import java.util.List;
 public class PurchaseHistoryServlet
         extends HttpServlet {
 
-    OrderDAO orderDAO =
+    private final OrderDAO orderDAO =
             new OrderDAO();
 
-    // =========================
-    // THÊM CHAT DAO
-    // =========================
-    ChatDAO chatDAO =
+    private final ChatDAO chatDAO =
             new ChatDAO();
 
     @Override
@@ -40,6 +37,7 @@ public class PurchaseHistoryServlet
         // =========================
         // CHECK LOGIN
         // =========================
+
         if(user == null){
 
             response.sendRedirect("login.jsp");
@@ -49,6 +47,7 @@ public class PurchaseHistoryServlet
         // =========================
         // LOAD HISTORY
         // =========================
+
         List<GameAccount> history =
                 orderDAO.getHistory(
                         user.getId()
@@ -60,8 +59,31 @@ public class PurchaseHistoryServlet
         );
 
         // =========================
+        // TOTAL PURCHASED
+        // =========================
+
+        request.setAttribute(
+                "totalPurchased",
+                orderDAO.getTotalPurchased(
+                        user.getId()
+                )
+        );
+
+        // =========================
+        // TOTAL SPENT
+        // =========================
+
+        request.setAttribute(
+                "totalSpent",
+                orderDAO.getTotalSpent(
+                        user.getId()
+                )
+        );
+
+        // =========================
         // LOAD CHAT
         // =========================
+
         request.setAttribute(
                 "chatList",
                 chatDAO.getChatByUser(
@@ -72,8 +94,10 @@ public class PurchaseHistoryServlet
         // =========================
         // FORWARD JSP
         // =========================
+
         request.getRequestDispatcher(
                 "purchase-history.jsp"
         ).forward(request,response);
     }
 }
+
