@@ -893,7 +893,7 @@
         %>
 
         <a href="add-product.jsp">➕ Thêm acc</a>
-
+        <a href="admin-dashboard"> 📊 DASHBOARD </a>
         <%
             }
         %>

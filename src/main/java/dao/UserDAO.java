@@ -114,4 +114,5 @@ public class UserDAO {
 
         return false;
     }
+    public int getTotalUsers(){ int total = 0; try { Connection conn = DBConnection.getConnection(); String sql = "SELECT COUNT(*) FROM users"; PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery(); if(rs.next()){ total = rs.getInt(1); } } catch (Exception e){ e.printStackTrace(); } return total; }
 }

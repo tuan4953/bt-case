@@ -202,4 +202,70 @@ public class OrderDAO {
 
         return total;
     }
+
+    public double getTotalRevenue(){
+
+        double total = 0;
+
+        try {
+
+            Connection conn =
+                    DBConnection.getConnection();
+
+            String sql =
+                    "SELECT SUM(purchase_price) " +
+                            "FROM orders";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ResultSet rs =
+                    ps.executeQuery();
+
+            if(rs.next()){
+
+                total = rs.getDouble(1);
+            }
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+
+    public int getTotalSold(){
+
+        int total = 0;
+
+        try {
+
+            Connection conn =
+                    DBConnection.getConnection();
+
+            String sql =
+                    "SELECT COUNT(*) FROM orders";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ResultSet rs =
+                    ps.executeQuery();
+
+            if(rs.next()){
+
+                total = rs.getInt(1);
+            }
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+
 }
