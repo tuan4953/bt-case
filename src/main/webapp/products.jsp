@@ -128,7 +128,7 @@
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: var(--font-body);
+            font-family: 'Arial', sans-serif;
             background-color: var(--bg);
             background-image:
                     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,197,24,0.08) 0%, transparent 60%),
