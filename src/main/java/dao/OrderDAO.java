@@ -100,9 +100,8 @@ public class OrderDAO {
                         rs.getString("game_id")
                 );
 
-                g.setAccountName(
-                        rs.getString("account_user")
-                );
+                g.setAccountUser( rs.getString("account_user") );
+                g.setAccountPass( rs.getString("account_pass") );
 
                 g.setPrice(
                         rs.getDouble("price")

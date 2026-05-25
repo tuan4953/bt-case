@@ -149,4 +149,42 @@ public class CartDAO {
 
         return false;
     }
+// COUNT CART
+
+    public int getCartCount(int userId){
+
+        int total = 0;
+
+        try {
+
+            Connection conn =
+                    DBConnection.getConnection();
+
+            String sql =
+                    "SELECT COUNT(*) " +
+                            "FROM cart " +
+                            "WHERE user_id=?";
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ps.setInt(1,userId);
+
+            ResultSet rs =
+                    ps.executeQuery();
+
+            if(rs.next()){
+
+                total = rs.getInt(1);
+            }
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+
 }

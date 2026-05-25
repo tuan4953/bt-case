@@ -1,5 +1,6 @@
 package controller;
 
+import dao.CartDAO;
 import dao.ChatDAO;
 import dao.GameAccountDAO;
 
@@ -21,6 +22,7 @@ public class ProductServlet extends HttpServlet {
 
     private final GameAccountDAO dao =
             new GameAccountDAO();
+    CartDAO cartDAO = new CartDAO();
 
     // =========================
     // THÊM CHAT DAO
@@ -93,6 +95,14 @@ public class ProductServlet extends HttpServlet {
                     "list",
                     list
             );
+            if(user != null){
+                request.setAttribute(
+                        "cartCount",
+                        cartDAO.getCartCount(
+                                user.getId()
+                        )
+                );
+            }
 
             // =========================
             // THÊM CHAT LIST

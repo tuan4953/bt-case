@@ -842,6 +842,51 @@
             animation: fadeUp 0.4s ease both;
         }
 
+        .cart-link{
+
+            position:relative;
+
+            display:inline-flex;
+
+            align-items:center;
+
+            gap:8px;
+        }
+
+        .cart-badge{
+
+            position:absolute;
+
+            top:-10px;
+
+            right:-12px;
+
+            background:red;
+
+            color:white;
+
+            min-width:22px;
+
+            height:22px;
+
+            border-radius:50%;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-size:12px;
+
+            font-weight:bold;
+
+            box-shadow:
+                    0 0 10px red;
+        }
+
+
+
     </style>
 
 </head>
@@ -878,7 +923,36 @@
             if(user!=null && !"ADMIN".equals(user.getRole())){
         %>
 
-        <a href="cart">🛒 Giỏ hàng</a>
+        <a class="cart-link"
+           href="cart">
+
+            🛒 Giỏ hàng
+
+            <%
+                Integer cartCount =
+                        (Integer)
+                                request.getAttribute(
+                                        "cartCount"
+                                );
+
+                if(cartCount != null
+                        &&
+                        cartCount > 0){
+            %>
+
+            <span class="cart-badge">
+
+<%= cartCount %>
+
+</span>
+
+            <%
+                }
+            %>
+
+        </a>
+
+
 
         <a href="purchase-history">📜 Lịch sử</a>
 
