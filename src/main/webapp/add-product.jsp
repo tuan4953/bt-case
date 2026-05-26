@@ -320,6 +320,43 @@
             }
         }
 
+           .pass-box{
+
+               margin-top:15px;
+           }
+
+        .gen-btn{
+
+            margin-top:12px;
+
+            background:gold;
+
+            color:black;
+
+            font-size:15px;
+
+            padding:12px;
+
+            border:none;
+
+            border-radius:10px;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .gen-btn:hover{
+
+            background:#ffd700;
+
+            box-shadow:0 0 15px gold;
+
+            transform:translateY(-2px);
+        }
+
+
+
     </style>
 
 </head>
@@ -400,7 +437,22 @@
                name="accountName"
                placeholder="Tên acc"
                required>
+        <div class="pass-box">
 
+            <input type="text"
+                   id="accountPass"
+                   name="accountPass"
+                   placeholder="Mật khẩu acc game"
+                   required>
+
+            <button type="button"
+                    class="gen-btn"
+                    onclick="generatePassword()">
+
+                🔐 Tạo mật khẩu
+
+            </button>
+        </div>
         <input type="number"
                name="price"
                placeholder="Giá"
@@ -515,6 +567,30 @@
             }
         }
     );
+
+function generatePassword(){
+
+    const chars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*!";
+
+    let password = "";
+
+    for(let i = 0; i < 12; i++){
+
+        password += chars.charAt(
+
+            Math.floor(
+                Math.random()
+                * chars.length
+            )
+        );
+    }
+
+    document.getElementById(
+            "accountPass"
+    ).value = password;
+}
+
 
 </script>
 </body>

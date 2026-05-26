@@ -884,7 +884,68 @@
             box-shadow:
                     0 0 10px red;
         }
+        .action-modal{
+            position:fixed;
+            inset:0;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            background:rgba(0,0,0,0.75);
+            backdrop-filter:blur(6px);
+            z-index:999999;
+            padding:16px;
+        }
 
+        .action-box{
+            width:100%;
+            max-width:380px;
+            background:var(--bg2);
+            border:1px solid var(--border-gold);
+            border-radius:20px;
+            padding:28px 24px;
+            text-align:center;
+            box-shadow:0 0 50px rgba(245,197,24,0.18);
+        }
+
+        .action-box h2{
+            color:var(--gold);
+            font-family:var(--font-display);
+            font-size:18px;
+            margin-bottom:12px;
+        }
+
+        .action-box p{
+            color:var(--muted);
+            font-size:15px;
+            font-weight:600;
+            line-height:1.6;
+            margin-bottom:24px;
+        }
+
+        .action-buttons{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:10px;
+        }
+
+        .action-buttons button{
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .action-cancel{
+            background:var(--bg3);
+            color:var(--muted);
+            border:1px solid var(--border) !important;
+        }
+
+        .action-confirm{
+            background:var(--gold);
+            color:black;
+        }
 
 
     </style>
@@ -1101,12 +1162,14 @@
             %>
 
             <a class="btn-cart"
-               href="add-to-cart?id=<%= g.getId() %>">
+               href="javascript:void(0)"
+               onclick="openActionModal(event,'add-to-cart?id=<%= g.getId() %>','🛒 XÁC NHẬN THÊM GIỎ','Bạn có chắc muốn thêm acc này vào giỏ hàng không?')">
                 🛒 Giỏ hàng
             </a>
 
             <a class="btn-buy"
-               href="buy-now?id=<%= g.getId() %>">
+               href="javascript:void(0)"
+               onclick="openActionModal(event,'buy-now?id=<%= g.getId() %>','💳 XÁC NHẬN MUA ACC','Bạn có chắc muốn mua acc này không?')">
                 💳 Mua ngay
             </a>
 
@@ -1191,7 +1254,16 @@
     </div>
 
 </div>
-
+<div id="actionModal" class="action-modal">
+    <div class="action-box">
+        <h2 id="actionTitle">XÁC NHẬN</h2>
+        <p id="actionMessage">Bạn có chắc muốn thực hiện thao tác này?</p>
+        <div class="action-buttons">
+            <button class="action-cancel" onclick="closeActionModal()">HUỶ</button>
+            <button class="action-confirm" onclick="confirmActionModal()">ĐỒNG Ý</button>
+        </div>
+    </div>
+</div>
 <jsp:include page="chat-box.jsp"/>
 
 <script>
@@ -1254,7 +1326,26 @@
         setTimeout(() => { toastBox.innerHTML = ""; }, 4000);
 
     });
+    let actionUrl = "";
 
+    function openActionModal(event,url,title,message){
+        event.stopPropagation();
+        actionUrl = url;
+        document.getElementById("actionTitle").innerText = title;
+        document.getElementById("actionMessage").innerText = message;
+        document.getElementById("actionModal").style.display = "flex";
+    }
+
+    function closeActionModal(){
+        document.getElementById("actionModal").style.display = "none";
+        actionUrl = "";
+    }
+
+    function confirmActionModal(){
+        if(actionUrl !== ""){
+            window.location.href = actionUrl;
+        }
+    }
 </script>
 
 </body>

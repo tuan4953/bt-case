@@ -31,40 +31,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giỏ hàng — Game Store</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* ── Reset ── */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* ── Tokens ── */
         :root {
-            --bg:        #0a0a0b;
-            --surface:   #111113;
-            --surface-2: #18181b;
-            --border:    rgba(255,255,255,0.07);
-            --border-h:  rgba(255,255,255,0.14);
-            --text:      #f4f4f5;
-            --muted:     #71717a;
-            --gold:      #f5c842;
-            --gold-dim:  rgba(245,200,66,0.12);
-            --red:        #ef4444;
-            --red-dim:    rgba(239,68,68,0.1);
-            --blue:       #3b82f6;
-            --blue-dim:   rgba(59,130,246,0.1);
-            --green:      #22c55e;
-            --green-dim:  rgba(34,197,94,0.1);
-            --radius-sm:  8px;
-            --radius-md:  14px;
-            --radius-lg:  20px;
+            --bg:         #f5f5f4;
+            --surface:    #ffffff;
+            --surface-2:  #fafaf9;
+            --border:     rgba(0,0,0,0.08);
+            --border-h:   rgba(0,0,0,0.14);
+            --text:       #1c1c1c;
+            --muted:      #78716c;
+            --amber:      #d97706;
+            --amber-bg:   #fffbeb;
+            --amber-bd:   rgba(217,119,6,0.25);
+            --red:        #dc2626;
+            --red-bg:     #fef2f2;
+            --red-bd:     rgba(220,38,38,0.2);
+            --blue:       #2563eb;
+            --blue-bg:    #eff6ff;
+            --blue-bd:    rgba(37,99,235,0.2);
+            --green:      #16a34a;
+            --green-bg:   #f0fdf4;
+            --green-bd:   rgba(22,163,74,0.2);
+            --r-sm:       8px;
+            --r-md:       12px;
+            --r-lg:       16px;
         }
 
-        /* ── Base ── */
         body {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
@@ -75,7 +72,7 @@
 
         /* ── Layout ── */
         .page {
-            max-width: 900px;
+            max-width: 860px;
             margin: 0 auto;
             padding: 0 20px 60px;
         }
@@ -85,23 +82,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 0 28px;
+            padding: 28px 0 24px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .header-brand {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             gap: 10px;
         }
 
         .header-brand h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-size: 20px;
+            font-weight: 600;
             color: var(--text);
+            letter-spacing: -0.3px;
         }
 
         .item-count {
@@ -109,9 +105,9 @@
             font-weight: 500;
             padding: 3px 10px;
             border-radius: 99px;
-            background: var(--gold-dim);
-            color: var(--gold);
-            border: 1px solid rgba(245,200,66,0.2);
+            background: var(--amber-bg);
+            color: var(--amber);
+            border: 1px solid var(--amber-bd);
         }
 
         .back-btn {
@@ -121,12 +117,12 @@
             font-size: 13px;
             font-weight: 500;
             color: var(--muted);
-            padding: 8px 16px;
+            padding: 8px 14px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            border-radius: var(--r-sm);
             background: var(--surface);
             cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
+            transition: color 0.18s, border-color 0.18s;
         }
 
         .back-btn:hover {
@@ -134,41 +130,59 @@
             border-color: var(--border-h);
         }
 
-        /* ── Cart grid ── */
+        .back-btn svg { width: 14px; height: 14px; }
+
+        /* ── Cart list ── */
         .cart-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 8px;
+            margin-bottom: 16px;
         }
 
-        /* ── Cart item card ── */
+        /* ── Cart item ── */
         .cart-item {
             display: grid;
-            grid-template-columns: 80px 1fr;
-            gap: 16px;
+            grid-template-columns: 32px 72px 1fr;
+            gap: 14px;
+            align-items: center;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 18px;
+            border-radius: var(--r-lg);
+            padding: 14px 16px;
             cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
+            transition: border-color 0.18s, box-shadow 0.18s;
         }
 
         .cart-item:hover {
             border-color: var(--border-h);
-            background: var(--surface-2);
+            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Checkbox */
+        .check-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-check {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--amber);
+            cursor: pointer;
+            flex-shrink: 0;
         }
 
         /* Thumbnail */
         .item-thumb {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius-md);
+            width: 72px;
+            height: 72px;
+            border-radius: var(--r-md);
             overflow: hidden;
-            flex-shrink: 0;
             background: var(--surface-2);
             border: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .item-thumb img {
@@ -182,7 +196,7 @@
         .item-body {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 5px;
             min-width: 0;
         }
 
@@ -190,13 +204,12 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 8px;
+            gap: 10px;
         }
 
         .item-name {
-            font-family: 'Syne', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 500;
             color: var(--text);
             overflow: hidden;
             text-overflow: ellipsis;
@@ -204,35 +217,30 @@
         }
 
         .item-price {
-            font-family: 'Syne', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--gold);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--amber);
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        /* Meta row */
+        /* Meta */
         .item-meta {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
 
         .meta-chip {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             font-size: 12px;
             color: var(--muted);
         }
 
-        .meta-chip svg {
-            width: 13px;
-            height: 13px;
-            flex-shrink: 0;
-            opacity: 0.6;
-        }
+        .meta-chip svg { width: 13px; height: 13px; opacity: 0.65; }
 
         .status-badge {
             display: inline-flex;
@@ -240,11 +248,11 @@
             gap: 4px;
             font-size: 11px;
             font-weight: 500;
-            padding: 2px 9px;
+            padding: 2px 8px;
             border-radius: 99px;
-            background: var(--green-dim);
+            background: var(--green-bg);
             color: var(--green);
-            border: 1px solid rgba(34,197,94,0.2);
+            border: 1px solid var(--green-bd);
         }
 
         .status-dot {
@@ -254,77 +262,76 @@
             background: var(--green);
         }
 
-        /* Action buttons */
+        /* Actions */
         .item-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-top: 2px;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             font-size: 12px;
             font-weight: 500;
-            padding: 7px 13px;
-            border-radius: var(--radius-sm);
+            padding: 5px 11px;
+            border-radius: var(--r-sm);
             border: 1px solid var(--border);
             background: transparent;
             color: var(--muted);
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.18s;
         }
 
         .btn svg { width: 13px; height: 13px; }
 
         .btn-remove:hover {
             color: var(--red);
-            border-color: rgba(239,68,68,0.35);
-            background: var(--red-dim);
+            border-color: var(--red-bd);
+            background: var(--red-bg);
         }
 
         .btn-buy {
             color: var(--blue);
-            border-color: rgba(59,130,246,0.3);
-            background: var(--blue-dim);
+            border-color: var(--blue-bd);
+            background: var(--blue-bg);
         }
 
         .btn-buy:hover {
-            background: rgba(59,130,246,0.18);
-            border-color: rgba(59,130,246,0.5);
+            border-color: rgba(37,99,235,0.4);
+            background: #dbeafe;
         }
 
-        /* ── Summary box ── */
+        /* ── Summary ── */
         .summary {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
+            border-radius: var(--r-lg);
+            padding: 20px 22px;
         }
 
         .summary-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 11px;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.07em;
             color: var(--muted);
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .summary-rows {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 18px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--muted);
         }
 
@@ -333,27 +340,27 @@
         .summary-sep {
             border: none;
             border-top: 1px solid var(--border);
-            margin: 18px 0;
+            margin: 14px 0;
         }
 
         .summary-total {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .summary-total .label {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             color: var(--text);
         }
 
         .summary-total .amount {
-            font-family: 'Syne', sans-serif;
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--gold);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--amber);
+            letter-spacing: -0.5px;
         }
 
         .checkout-btn {
@@ -361,25 +368,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 14px;
-            font-family: 'Syne', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
+            gap: 7px;
+            padding: 13px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
             border: none;
-            border-radius: var(--radius-md);
-            background: var(--gold);
-            color: #0a0a0b;
+            border-radius: var(--r-md);
+            background: var(--amber);
+            color: #fff;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.15s;
+            transition: opacity 0.18s, transform 0.15s;
         }
 
         .checkout-btn:hover {
-            opacity: 0.92;
+            opacity: 0.9;
             transform: translateY(-1px);
         }
 
-        .checkout-btn svg { width: 18px; height: 18px; }
+        .checkout-btn svg { width: 17px; height: 17px; }
 
         /* ── Empty state ── */
         .empty-state {
@@ -387,35 +394,34 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
             padding: 80px 20px;
             text-align: center;
         }
 
         .empty-icon {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background: var(--surface-2);
+            background: var(--surface);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .empty-icon svg { width: 28px; height: 28px; color: var(--muted); }
+        .empty-icon svg { width: 26px; height: 26px; color: var(--muted); }
 
         .empty-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 18px;
+            font-weight: 600;
             color: var(--text);
         }
 
         .empty-sub {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--muted);
-            max-width: 280px;
+            max-width: 260px;
         }
 
         .shop-link {
@@ -423,23 +429,22 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 10px 22px;
-            border-radius: var(--radius-md);
-            background: var(--gold);
-            color: #0a0a0b;
-            font-family: 'Syne', sans-serif;
+            padding: 10px 20px;
+            border-radius: var(--r-md);
+            background: var(--amber);
+            color: #fff;
             font-size: 13px;
-            font-weight: 700;
-            transition: opacity 0.2s;
+            font-weight: 600;
+            transition: opacity 0.18s;
         }
 
         .shop-link:hover { opacity: 0.88; }
 
         /* ── Responsive ── */
         @media (max-width: 520px) {
-            .cart-item { grid-template-columns: 60px 1fr; gap: 12px; padding: 14px; }
-            .item-thumb { width: 60px; height: 60px; }
-            .item-name { font-size: 14px; }
+            .cart-item { grid-template-columns: 28px 56px 1fr; gap: 10px; padding: 12px; }
+            .item-thumb { width: 56px; height: 56px; }
+            .item-name { font-size: 13px; }
         }
     </style>
 </head>
@@ -456,7 +461,7 @@
             <% } %>
         </div>
         <a href="products" class="back-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
             Quay lại shop
         </a>
     </header>
@@ -464,10 +469,19 @@
     <!-- Cart content -->
     <% if (!isEmpty) { %>
 
-    <!-- Item list -->
     <div class="cart-list">
         <% for (GameAccount g : cart) { %>
         <div class="cart-item" onclick="goDetail(<%= g.getId() %>)">
+
+            <div class="check-wrap">
+                <input type="checkbox"
+                       name="selectedIds"
+                       value="<%= g.getId() %>"
+                       class="cart-check"
+                       data-price="<%= g.getPrice() %>"
+                       checked
+                       onclick="event.stopPropagation()">
+            </div>
 
             <div class="item-thumb">
                 <img src="<%= request.getContextPath() %>/image?name=<%= g.getImage() %>"
@@ -482,14 +496,14 @@
                 </div>
 
                 <div class="item-meta">
-                        <span class="meta-chip">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                            <%= g.getAccountName() %>
-                        </span>
+                    <span class="meta-chip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                        <%= g.getAccountName() %>
+                    </span>
                     <span class="status-badge">
-                            <span class="status-dot"></span>
-                            <%= g.getStatus() %>
-                        </span>
+                        <span class="status-dot"></span>
+                        <%= g.getStatus() %>
+                    </span>
                 </div>
 
                 <div class="item-actions">
@@ -531,7 +545,7 @@
 
         <div class="summary-total">
             <span class="label">Tổng thanh toán</span>
-            <span class="amount"><%= String.format("%,.0f", total) %>đ</span>
+            <span class="amount"><span id="totalPrice"><%= String.format("%,.0f", total) %></span>đ</span>
         </div>
 
         <form action="checkout-cart" method="post">
@@ -562,6 +576,20 @@
     function goDetail(id) {
         window.location.href = "account-detail?id=" + id;
     }
+
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll(".cart-check").forEach(cb => {
+            if (cb.checked) total += Number(cb.dataset.price);
+        });
+        document.getElementById("totalPrice").innerText = total.toLocaleString('vi-VN');
+    }
+
+    document.querySelectorAll(".cart-check").forEach(cb => {
+        cb.addEventListener("change", updateTotal);
+    });
+
+    updateTotal();
 </script>
 
 </body>
