@@ -35,7 +35,7 @@ public class AdminDashboardServlet
 
         if(session == null){
 
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
             return;
         }
 
