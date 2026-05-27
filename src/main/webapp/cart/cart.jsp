@@ -548,92 +548,94 @@
     <!-- Cart content -->
     <% if (!isEmpty) { %>
 
-    <div class="cart-list">
-        <% for (GameAccount g : cart) { %>
-        <div class="cart-item" onclick="goDetail(<%= g.getId() %>)">
+    <form action="<%= request.getContextPath() %>/checkout-cart" method="post" id="checkoutForm">
 
-            <div class="check-wrap">
-                <input type="checkbox"
-                       name="selectedIds"
-                       value="<%= g.getId() %>"
-                       class="cart-check"
-                       data-price="<%= g.getPrice() %>"
-                       checked
-                       onclick="event.stopPropagation()">
-            </div>
+        <div class="cart-list">
+            <% for (GameAccount g : cart) { %>
+            <div class="cart-item" onclick="goDetail(<%= g.getId() %>)">
 
-            <div class="item-thumb">
-                <img src="<%= request.getContextPath() %>/image?name=<%= g.getImage() %>"
-                     alt="<%= g.getGameName() %>"
-                     onerror="this.style.display='none'">
-            </div>
-
-            <div class="item-body">
-                <div class="item-top">
-                    <span class="item-name"><%= g.getGameName() %></span>
-                    <span class="item-price"><%= String.format("%,.0f", g.getPrice()) %>đ</span>
+                <div class="check-wrap">
+                    <input type="checkbox"
+                           name="selectedIds"
+                           value="<%= g.getId() %>"
+                           class="cart-check"
+                           data-price="<%= g.getPrice() %>"
+                           checked
+                           onclick="event.stopPropagation()">
                 </div>
 
-                <div class="item-meta">
+                <div class="item-thumb">
+                    <img src="<%= request.getContextPath() %>/image?name=<%= g.getImage() %>"
+                         alt="<%= g.getGameName() %>"
+                         onerror="this.style.display='none'">
+                </div>
+
+                <div class="item-body">
+                    <div class="item-top">
+                        <span class="item-name"><%= g.getGameName() %></span>
+                        <span class="item-price"><%= String.format("%,.0f", g.getPrice()) %>đ</span>
+                    </div>
+
+                    <div class="item-meta">
                     <span class="meta-chip">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                         <%= g.getAccountName() %>
                     </span>
-                    <span class="status-badge">
+                        <span class="status-badge">
                         <span class="status-dot"></span>
                         <%= g.getStatus() %>
                     </span>
+                    </div>
+
+                    <div class="item-actions">
+                        <a class="btn btn-remove"
+                           href="<%= request.getContextPath() %>/remove-cart?id=<%= g.getId() %>"
+                           onclick="event.stopPropagation()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                            Xoá
+                        </a>
+                        <a class="btn btn-buy"
+                           href="<%= request.getContextPath() %>/buy-now?id=<%= g.getId() %>"
+                           onclick="event.stopPropagation()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            Mua ngay
+                        </a>
+                    </div>
                 </div>
 
-                <div class="item-actions">
-                    <a class="btn btn-remove"
-                       href="<%= request.getContextPath() %>/remove-cart?id=<%= g.getId() %>"
-                       onclick="event.stopPropagation()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                        Xoá
-                    </a>
-                    <a class="btn btn-buy"
-                       href="<%= request.getContextPath() %>/buy-now?id=<%= g.getId() %>"
-                       onclick="event.stopPropagation()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                        Mua ngay
-                    </a>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <p class="summary-title">Tóm tắt đơn hàng</p>
+
+            <div class="summary-rows">
+                <div class="summary-row">
+                    <span>Số lượng</span>
+                    <span><span id="selectedCount"><%= cart.size() %></span> sản phẩm</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí xử lý</span>
+                    <span>Miễn phí</span>
                 </div>
             </div>
 
-        </div>
-        <% } %>
-    </div>
+            <hr class="summary-sep">
 
-    <!-- Summary -->
-    <div class="summary">
-        <p class="summary-title">Tóm tắt đơn hàng</p>
-
-        <div class="summary-rows">
-            <div class="summary-row">
-                <span>Số lượng</span>
-                <span><%= cart.size() %> sản phẩm</span>
+            <div class="summary-total">
+                <span class="label">Tổng thanh toán</span>
+                <span class="amount"><span id="totalPrice"><%= String.format("%,.0f", total) %></span>đ</span>
             </div>
-            <div class="summary-row">
-                <span>Phí xử lý</span>
-                <span>Miễn phí</span>
-            </div>
-        </div>
 
-        <hr class="summary-sep">
-
-        <div class="summary-total">
-            <span class="label">Tổng thanh toán</span>
-            <span class="amount"><span id="totalPrice"><%= String.format("%,.0f", total) %></span>đ</span>
-        </div>
-
-        <form action="<%= request.getContextPath() %>/checkout-cart" method="post">
             <button type="submit" class="checkout-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                Thanh toán tất cả
+                Thanh toán mục đã chọn
             </button>
-        </form>
-    </div>
+        </div>
+
+    </form>
 
     <% } else { %>
 
@@ -666,15 +668,44 @@
 
     function updateTotal() {
         let total = 0;
+        let count = 0;
+
         document.querySelectorAll(".cart-check").forEach(cb => {
-            if (cb.checked) total += Number(cb.dataset.price);
+            if (cb.checked) {
+                total += Number(cb.dataset.price);
+                count++;
+            }
         });
-        document.getElementById("totalPrice").innerText = total.toLocaleString('vi-VN');
+
+        document.getElementById("totalPrice").innerText =
+            total.toLocaleString('vi-VN');
+
+        const selectedCount =
+            document.getElementById("selectedCount");
+
+        if (selectedCount) {
+            selectedCount.innerText = count;
+        }
     }
 
     document.querySelectorAll(".cart-check").forEach(cb => {
         cb.addEventListener("change", updateTotal);
     });
+
+    const checkoutForm =
+        document.getElementById("checkoutForm");
+
+    if (checkoutForm) {
+        checkoutForm.addEventListener("submit", function(e) {
+            const checked =
+                document.querySelectorAll(".cart-check:checked");
+
+            if (checked.length === 0) {
+                e.preventDefault();
+                alert("Vui lòng chọn ít nhất 1 acc để thanh toán!");
+            }
+        });
+    }
 
     updateTotal();
 </script>
