@@ -30,7 +30,7 @@ public class DepositServlet extends HttpServlet {
 
             if(user == null){
 
-                response.sendRedirect("login.jsp");
+                response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
                 return;
             }
 

@@ -1,0 +1,540 @@
+<%@ page import="model.User" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+    User user =
+            (User) session.getAttribute("user");
+
+    if(user == null ||
+            !"ADMIN".equalsIgnoreCase(user.getRole())){
+
+        response.sendRedirect(
+                request.getContextPath()
+                        + "/auth/login.jsp"
+        );
+
+        return;
+    }
+
+    String message =
+            (String) session.getAttribute("message");
+
+    String error =
+            (String) session.getAttribute("error");
+%>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Add Product</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            background:
+                    linear-gradient(
+                            rgba(0,0,0,0.7),
+                            rgba(0,0,0,0.85)
+                    ),
+                    url('https://img.thuthuatphanmem.vn/uploads/2018/09/27/anh-nen-4k-cho-desktop_105907396.jpg');
+
+            background-size:cover;
+
+            background-attachment:fixed;
+
+            background-position:center;
+
+            font-family:Arial;
+
+            color:white;
+
+            min-height:100vh;
+
+            padding:40px 0;
+        }
+
+        .container{
+
+            width:550px;
+
+            margin:auto;
+
+            background:rgba(20,20,20,0.92);
+
+            padding:40px;
+
+            border:2px solid gold;
+
+            border-radius:20px;
+
+            backdrop-filter:blur(10px);
+
+            box-shadow:
+                    0 0 25px rgba(255,215,0,0.2);
+        }
+
+        h1{
+
+            text-align:center;
+
+            color:gold;
+
+            margin-bottom:30px;
+
+            font-size:38px;
+
+            text-shadow:0 0 12px gold;
+        }
+
+        .success{
+
+            background:#00aa00;
+
+            padding:15px;
+
+            border-radius:10px;
+
+            margin-bottom:20px;
+
+            text-align:center;
+
+            font-weight:bold;
+        }
+
+        .error{
+
+            background:#8b0000;
+
+            padding:15px;
+
+            border-radius:10px;
+
+            margin-bottom:20px;
+
+            text-align:center;
+
+            font-weight:bold;
+        }
+
+        .search-box{
+
+            display:flex;
+
+            gap:10px;
+
+            margin-bottom:25px;
+        }
+
+        .search-box input{
+
+            flex:1;
+        }
+
+        .search-box button{
+
+            width:120px;
+
+            margin-top:0;
+
+            background:gold;
+
+            color:black;
+        }
+
+        input,
+        select{
+
+            width:100%;
+
+            padding:15px;
+
+            margin-top:15px;
+
+            border:none;
+
+            border-radius:12px;
+
+            font-size:16px;
+
+            box-sizing:border-box;
+
+            background:rgba(255,255,255,0.08);
+
+            color:white;
+
+            border:1px solid rgba(255,215,0,0.3);
+
+            outline:none;
+
+            transition:0.3s;
+        }
+
+        input:focus,
+        select:focus{
+
+            border-color:gold;
+
+            box-shadow:0 0 10px gold;
+        }
+
+        option{
+            color:black;
+        }
+
+        .file-box{
+
+            background:rgba(255,255,255,0.08);
+
+            padding:18px;
+
+            border-radius:12px;
+
+            margin-top:20px;
+
+            border:1px solid rgba(255,215,0,0.3);
+        }
+
+        .preview{
+
+            width:100%;
+
+            height:280px;
+
+            object-fit:cover;
+
+            border-radius:15px;
+
+            margin-top:20px;
+
+            border:2px solid gold;
+
+            background:black;
+        }
+
+        button{
+
+            width:100%;
+
+            padding:15px;
+
+            margin-top:25px;
+
+            border:none;
+
+            background:#8b0000;
+
+            color:white;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            border-radius:12px;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        button:hover{
+
+            background:#c40000;
+
+            transform:translateY(-2px);
+
+            box-shadow:0 0 15px red;
+        }
+
+        .back-btn{
+
+            display:block;
+
+            margin-top:22px;
+
+            text-decoration:none;
+
+            color:white;
+
+            background:#001f54;
+
+            padding:14px;
+
+            border-radius:12px;
+
+            text-align:center;
+
+            transition:0.3s;
+        }
+
+        .back-btn:hover{
+
+            background:#003b99;
+
+            box-shadow:0 0 15px #007bff;
+        }
+
+        @media(max-width:650px){
+
+            .container{
+
+                width:95%;
+            }
+
+            .search-box{
+
+                flex-direction:column;
+            }
+
+            .search-box button{
+
+                width:100%;
+            }
+        }
+
+        .pass-box{
+
+            margin-top:15px;
+        }
+
+        .gen-btn{
+
+            margin-top:12px;
+
+            background:gold;
+
+            color:black;
+
+            font-size:15px;
+
+            padding:12px;
+
+            border:none;
+
+            border-radius:10px;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .gen-btn:hover{
+
+            background:#ffd700;
+
+            box-shadow:0 0 15px gold;
+
+            transform:translateY(-2px);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        THÊM ACC GAME
+    </h1>
+
+    <%
+        if(message != null){
+    %>
+
+    <div class="success">
+        <%= message %>
+    </div>
+
+    <%
+            session.removeAttribute("message");
+        }
+    %>
+
+    <%
+        if(error != null){
+    %>
+
+    <div class="error">
+        <%= error %>
+    </div>
+
+    <%
+            session.removeAttribute("error");
+        }
+    %>
+
+    <form class="search-box"
+          action="<%= request.getContextPath() %>/products"
+          method="get">
+
+        <input type="text"
+               name="keyword"
+               placeholder="Tìm theo tên acc...">
+
+        <button type="submit">
+            SEARCH
+        </button>
+
+    </form>
+
+    <form action="<%= request.getContextPath() %>/add-product"
+          method="post"
+          enctype="multipart/form-data">
+
+        <input type="text"
+               name="gameName"
+               placeholder="Tên game"
+               required>
+
+        <input type="text"
+               name="accountName"
+               placeholder="Tên acc"
+               required>
+
+        <div class="pass-box">
+
+            <input type="text"
+                   id="accountPass"
+                   name="accountPass"
+                   placeholder="Mật khẩu acc game"
+                   required>
+
+            <button type="button"
+                    class="gen-btn"
+                    onclick="generatePassword()">
+
+                🔐 Tạo mật khẩu
+
+            </button>
+        </div>
+
+        <input type="number"
+               name="price"
+               placeholder="Giá"
+               min="0"
+               required>
+
+        <select name="status"
+                required>
+
+            <option value="AVAILABLE">
+                AVAILABLE
+            </option>
+
+            <option value="PENDING">
+                PENDING
+            </option>
+
+            <option value="SOLD">
+                SOLD
+            </option>
+
+        </select>
+
+        <input type="text"
+               name="categoryId"
+               placeholder="ID danh mục (optional)">
+
+        <div class="file-box">
+
+            <label>
+                Chọn ảnh sản phẩm:
+            </label>
+
+            <br><br>
+
+            <input type="file"
+                   name="image"
+                   accept="image/*"
+                   required>
+
+        </div>
+
+        <img id="preview"
+             class="preview"
+             src="https://via.placeholder.com/500x300?text=PREVIEW">
+
+        <button type="submit"
+                onclick="this.disabled=true;this.form.submit();">
+
+            THÊM SẢN PHẨM
+
+        </button>
+
+    </form>
+
+    <a class="back-btn"
+       href="<%= request.getContextPath() %>/products">
+
+        ← Quay lại shop
+
+    </a>
+
+</div>
+
+<jsp:include page="/chat/chat-box.jsp"/>
+
+<script>
+
+    const input =
+        document.querySelector(
+            'input[name="image"]'
+        );
+
+    const preview =
+        document.getElementById(
+            "preview"
+        );
+
+    input.addEventListener(
+        "change",
+        function(){
+
+            const file =
+                this.files[0];
+
+            if(file){
+
+                preview.src =
+                    URL.createObjectURL(file);
+            }
+        }
+    );
+
+    function generatePassword(){
+
+        const chars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*!";
+
+        let password = "";
+
+        for(let i = 0; i < 12; i++){
+
+            password += chars.charAt(
+
+                Math.floor(
+                    Math.random()
+                    * chars.length
+                )
+            );
+        }
+
+        document.getElementById(
+            "accountPass"
+        ).value = password;
+    }
+
+</script>
+
+</body>
+</html>

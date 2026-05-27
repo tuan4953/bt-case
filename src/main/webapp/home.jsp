@@ -8,7 +8,7 @@
   // CHƯA LOGIN
   if(user == null){
 
-    response.sendRedirect("login.jsp");
+    response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
     return;
   }
 %>
@@ -414,7 +414,7 @@
 
 </head>
 
-<jsp:include page="chat-box.jsp" />
+<jsp:include page="chat/chat-box.jsp" />
 
 <body>
 
@@ -488,7 +488,7 @@
 
     <p>Nạp tiền trực tiếp vào tài khoản để mua acc game.</p>
 
-    <a class="go-btn" href="deposit.jsp">NẠP NGAY</a>
+    <a class="go-btn" href="user/deposit.jsp">NẠP NGAY</a>
 
   </div>
 

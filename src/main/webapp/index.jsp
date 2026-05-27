@@ -138,7 +138,7 @@
     </style>
 
 </head>
-<jsp:include page="chat-box.jsp" />
+<jsp:include page="chat/chat-box.jsp" />
 <body>
 
 <div class="container">
@@ -154,12 +154,12 @@
         %>
 
         <a class="btn admin-btn"
-           href="<%= request.getContextPath() %>/login.jsp">
+           href="<%= request.getContextPath() %>/auth/login.jsp">
             LOGIN
         </a>
 
         <a class="btn register-btn"
-           href="<%= request.getContextPath() %>/register.jsp">
+           href="<%= request.getContextPath() %>/auth/register.jsp">
             ĐĂNG KÝ
         </a>
 
@@ -177,7 +177,7 @@
         %>
 
         <a class="btn admin-btn"
-           href="<%= request.getContextPath() %>/admin.jsp">
+           href="<%= request.getContextPath() %>/user/admin.jsp">
             ADMIN PANEL
         </a>
 
